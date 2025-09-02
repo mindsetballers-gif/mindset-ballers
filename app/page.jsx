@@ -6,11 +6,10 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  // ===== CONFIG =====
+  // ===== Config =====
   const MATRIX_ALPHA = 0.08;
   const MATRIX_FONT_SIZE = 16;
   const TYPE_SPEED = 40;
-  // ==================
 
   const [showLogin, setShowLogin] = useState(false);
   const [displayed, setDisplayed] = useState("");
@@ -20,7 +19,7 @@ export default function Home() {
   const rainIntervalRef = useRef(null);
   const typingStartedRef = useRef(false);
 
-  // Texto inicial
+  // Texto de intro
   const fullText = `
  Bienvenido, futbolista.
 
@@ -45,7 +44,7 @@ Si deseas continuar y convertirte en parte de esta comunidad,
 PULSA ENTER para avanzar.
 `;
 
-  // ===== EFECTO ESCRITURA =====
+  // Efecto de escritura
   useEffect(() => {
     if (typingStartedRef.current) return;
     typingStartedRef.current = true;
@@ -61,9 +60,9 @@ PULSA ENTER para avanzar.
     }, TYPE_SPEED);
 
     return () => clearInterval(id);
-  }, []);
+  }, []); // solo una vez
 
-  // ===== DETECTAR ENTER =====
+  // Enter para mostrar login
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Enter" && typingDone) setShowLogin(true);
@@ -72,7 +71,7 @@ PULSA ENTER para avanzar.
     return () => window.removeEventListener("keydown", onKey);
   }, [typingDone]);
 
-  // ===== EFECTO MATRIX =====
+  // Lluvia “Matrix”
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -103,10 +102,7 @@ PULSA ENTER para avanzar.
         const char = Math.random() < 0.5 ? "0" : "1";
         ctx.fillText(char, i * MATRIX_FONT_SIZE, drops[i] * MATRIX_FONT_SIZE);
 
-        if (
-          drops[i] * MATRIX_FONT_SIZE > canvas.height &&
-          Math.random() > 0.975
-        ) {
+        if (drops[i] * MATRIX_FONT_SIZE > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
@@ -121,7 +117,7 @@ PULSA ENTER para avanzar.
     };
   }, []);
 
-  // ===== UI =====
+  // UI
   return (
     <div
       style={{
@@ -136,14 +132,10 @@ PULSA ENTER para avanzar.
       {/* Fondo Matrix */}
       <canvas
         ref={canvasRef}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 0,
-        }}
+        style={{ position: "fixed", inset: 0, zIndex: 0 }}
       />
 
-      {/* Texto introducción */}
+      {/* Texto antes del login */}
       {!showLogin && (
         <div
           style={{
@@ -176,7 +168,7 @@ PULSA ENTER para avanzar.
         </div>
       )}
 
-      {/* Login */}
+      {/* Login “prueba suerte” */}
       {showLogin && (
         <div
           style={{
@@ -191,7 +183,7 @@ PULSA ENTER para avanzar.
         >
           <div
             style={{
-              width: 380,
+              width: 360,
               border: "1px solid rgba(255,255,255,0.6)",
               padding: 24,
               background: "rgba(0,0,0,0.6)",
@@ -209,14 +201,26 @@ PULSA ENTER para avanzar.
             >
               🔒 ACCESO RESTRINGIDO
             </h1>
+
+            <p style={{ fontSize: 13, opacity: 0.85, textAlign: "center" }}>
+              <em>
+                Escribe tu <strong>nombre</strong> y una{" "}
+                <strong>contraseña inventada</strong> y pulsa “Entrar” para
+                probar suerte.
+              </em>
+            </p>
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                const username = e.target.username.value;
-                localStorage.setItem("username", username);
-                router.push("/intro");
+                const formData = new FormData(e.currentTarget);
+                const username = (formData.get("username") || "futbolista").toString();
+                try {
+                  window.localStorage.setItem("username", username);
+                } catch {}
+                router.push(`/intro?username=${encodeURIComponent(username)}`);
               }}
-              style={{ display: "flex", flexDirection: "column", gap: 12 }}
+              style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}
             >
               <input
                 name="username"
@@ -234,7 +238,7 @@ PULSA ENTER para avanzar.
               <input
                 name="password"
                 type="password"
-                placeholder="Contraseña"
+                placeholder="Contraseña (invéntatela)"
                 required
                 style={{
                   background: "transparent",
@@ -244,13 +248,10 @@ PULSA ENTER para avanzar.
                   fontFamily: '"Courier New", monospace',
                 }}
               />
-              <small style={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
-                💡 Prueba suerte… inventa tu nombre y tu contraseña.
-              </small>
               <button
                 type="submit"
                 style={{
-                  marginTop: 8,
+                  marginTop: 4,
                   padding: "10px 12px",
                   background: "white",
                   color: "black",
@@ -266,12 +267,9 @@ PULSA ENTER para avanzar.
         </div>
       )}
 
-      {/* CSS cursor */}
       <style jsx>{`
         @keyframes blink {
-          50% {
-            opacity: 0;
-          }
+          50% { opacity: 0; }
         }
       `}</style>
     </div>
