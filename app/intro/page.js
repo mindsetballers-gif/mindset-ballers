@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -11,7 +13,6 @@ export default function IntroPage() {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      // Intentar reproducir automáticamente con sonido
       video.play().catch(() => {
         console.warn("El navegador bloqueó la reproducción automática con sonido.");
       });
@@ -21,10 +22,7 @@ export default function IntroPage() {
       };
 
       video.addEventListener("ended", handleEnded);
-
-      return () => {
-        video.removeEventListener("ended", handleEnded);
-      };
+      return () => video.removeEventListener("ended", handleEnded);
     }
   }, [router, username]);
 
@@ -34,8 +32,8 @@ export default function IntroPage() {
         ref={videoRef}
         className="rounded-xl shadow-lg border-2 border-green-500"
         style={{
-          maxWidth: "100%",   // No sobrepasa el ancho de la pantalla
-          maxHeight: "100vh", // No sobrepasa la altura de la pantalla
+          maxWidth: "100%",
+          maxHeight: "100vh",
           height: "auto",
           margin: "0 auto",
           display: "block",
