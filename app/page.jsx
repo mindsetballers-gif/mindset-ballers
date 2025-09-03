@@ -9,46 +9,38 @@ export default function Home() {
   // ===== Config =====
   const MATRIX_ALPHA = 0.08;
   const MATRIX_FONT_SIZE = 16;
-  const TYPE_SPEED = 40;
+  const TYPE_SPEED = 35;
 
   const [showLogin, setShowLogin] = useState(false);
   const [displayed, setDisplayed] = useState("");
   const [typingDone, setTypingDone] = useState(false);
 
   const canvasRef = useRef(null);
-  const rainIntervalRef = useRef(null);
   const typingStartedRef = useRef(false);
 
-  // Texto de intro
   const fullText = `
- Bienvenido, futbolista.
+ ACCESO A SISTEMA PRIVADO · Mindset Ballers
+Verificación de integridad... OK
+Canales seguros... OK
+Capa de cifrado... ACTIVA
 
-Has accedido a un área secreta y exclusiva, reservada solo para aquellos
-que buscan ir más allá del juego.
+Has accedido a una base de datos confidencial.
+Solo unos pocos futbolistas llegan hasta aquí.
 
-Aquí descubrirás cómo dominar tu mente para alcanzar el máximo rendimiento
-en el terreno de juego.
+Solo unos pocos están dispuestos a sacrificar cualquier cosa,
+si es así continúa aquí. 
+De lo contrario es mejor que abandones esta página.
 
-Jugadores históricos han demostrado que la mentalidad lo es todo:
-Cristiano Ronaldo con su disciplina inquebrantable,
-Ronaldinho con su magia y creatividad,
-Messi con su visión sobrenatural.
+Si estás preparado para desbloquear mentalidad,
+enfoque y rendimiento de élite…
 
-Ellos marcaron la diferencia no solo con talento,
-sino con una mentalidad única.
-
-Este lugar es exclusivo. Misterioso. No todos deberían estar aquí.
-
-─────────────────────────────
-Si deseas continuar y convertirte en parte de esta comunidad,
 PULSA ENTER para avanzar.
 `;
 
-  // Efecto de escritura
+  // ===== Escritura tipo consola =====
   useEffect(() => {
     if (typingStartedRef.current) return;
     typingStartedRef.current = true;
-
     let i = 0;
     const id = setInterval(() => {
       setDisplayed((prev) => prev + fullText[i]);
@@ -58,11 +50,10 @@ PULSA ENTER para avanzar.
         setTypingDone(true);
       }
     }, TYPE_SPEED);
-
     return () => clearInterval(id);
-  }, []); // solo una vez
+  }, []);
 
-  // Enter para mostrar login
+  // ===== Enter abre el login =====
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Enter" && typingDone) setShowLogin(true);
@@ -71,7 +62,7 @@ PULSA ENTER para avanzar.
     return () => window.removeEventListener("keydown", onKey);
   }, [typingDone]);
 
-  // Lluvia “Matrix”
+  // ===== Fondo Matrix =====
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -96,12 +87,10 @@ PULSA ENTER para avanzar.
     const draw = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = `rgba(0, 255, 0, ${MATRIX_ALPHA})`;
       for (let i = 0; i < drops.length; i++) {
         const char = Math.random() < 0.5 ? "0" : "1";
         ctx.fillText(char, i * MATRIX_FONT_SIZE, drops[i] * MATRIX_FONT_SIZE);
-
         if (drops[i] * MATRIX_FONT_SIZE > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
@@ -109,15 +98,19 @@ PULSA ENTER para avanzar.
       }
     };
 
-    rainIntervalRef.current = setInterval(draw, 33);
+    const rafLoop = () => {
+      draw();
+      animId = requestAnimationFrame(rafLoop);
+    };
+    let animId = requestAnimationFrame(rafLoop);
 
     return () => {
-      clearInterval(rainIntervalRef.current);
+      cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
-  // UI
+  // ===== Render =====
   return (
     <div
       style={{
@@ -135,7 +128,7 @@ PULSA ENTER para avanzar.
         style={{ position: "fixed", inset: 0, zIndex: 0 }}
       />
 
-      {/* Texto antes del login */}
+      {/* Texto consola */}
       {!showLogin && (
         <div
           style={{
@@ -146,29 +139,20 @@ PULSA ENTER para avanzar.
             lineHeight: 1.6,
             fontSize: 18,
             whiteSpace: "pre-wrap",
+            color: "#baffbf",
+            textShadow: "0 0 8px rgba(0,255,0,.25)",
           }}
         >
           {displayed}
           {typingDone && (
-            <div style={{ marginTop: 16, fontWeight: "bold" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 8,
-                  height: 20,
-                  background: "white",
-                  marginRight: 8,
-                  animation: "blink 1s step-start infinite",
-                  verticalAlign: "middle",
-                }}
-              />
-              PULSA ENTER para continuar
+            <div style={{ marginTop: 16, fontWeight: "bold", color: "#fff" }}>
+              ▌PULSA ENTER para continuar
             </div>
           )}
         </div>
       )}
 
-      {/* Login “prueba suerte” */}
+      {/* Login */}
       {showLogin && (
         <div
           style={{
@@ -183,95 +167,103 @@ PULSA ENTER para avanzar.
         >
           <div
             style={{
-              width: 360,
-              border: "1px solid rgba(255,255,255,0.6)",
+              width: 380,
+              border: "1px solid rgba(0,255,0,0.35)",
               padding: 24,
-              background: "rgba(0,0,0,0.6)",
-              boxShadow: "0 0 20px rgba(255,255,255,0.08)",
+              background:
+                "linear-gradient(180deg, rgba(0,255,0,.05), rgba(0,0,0,.4))",
+              boxShadow: "0 0 30px rgba(0,255,0,.25)",
+              borderRadius: 12,
+              color: "#eaffea",
             }}
           >
             <h1
               style={{
                 margin: 0,
-                marginBottom: 8,
+                marginBottom: 10,
                 fontSize: 22,
                 letterSpacing: 1,
                 textAlign: "center",
+                color: "#83ff8a",
+                textShadow: "0 0 10px rgba(0,255,0,.45)",
               }}
             >
               🔒 ACCESO RESTRINGIDO
             </h1>
 
-            <p style={{ fontSize: 13, opacity: 0.85, textAlign: "center" }}>
-              <em>
-                Escribe tu <strong>nombre</strong> y una{" "}
-                <strong>contraseña inventada</strong> y pulsa “Entrar” para
-                probar suerte.
-              </em>
+            <p style={{ fontSize: 14, opacity: 0.9, marginBottom: 12 }}>
+              <strong>Prueba suerte:</strong> escribe un <em>usuario</em> y una{" "}
+              <em>contraseña</em> cualquiera para intentar acceder.
             </p>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                const username = (formData.get("username") || "futbolista").toString();
-                try {
-                  window.localStorage.setItem("username", username);
-                } catch {}
-                router.push(`/intro?username=${encodeURIComponent(username)}`);
-              }}
-              style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}
-            >
-              <input
-                name="username"
-                type="text"
-                placeholder="Nombre de usuario"
-                required
-                style={{
-                  background: "transparent",
-                  border: "1px solid rgba(255,255,255,0.7)",
-                  color: "white",
-                  padding: "10px 12px",
-                  fontFamily: '"Courier New", monospace',
-                }}
-              />
-              <input
-                name="password"
-                type="password"
-                placeholder="Contraseña (invéntatela)"
-                required
-                style={{
-                  background: "transparent",
-                  border: "1px solid rgba(255,255,255,0.7)",
-                  color: "white",
-                  padding: "10px 12px",
-                  fontFamily: '"Courier New", monospace',
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  marginTop: 4,
-                  padding: "10px 12px",
-                  background: "white",
-                  color: "black",
-                  fontWeight: "bold",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Entrar
-              </button>
-            </form>
+            <LoginForm />
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes blink {
-          50% { opacity: 0; }
-        }
-      `}</style>
     </div>
+  );
+}
+
+function LoginForm() {
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const safe = username.trim() || "futbolista";
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("username", safe);
+        }
+        router.push(`/intro?username=${encodeURIComponent(safe)}`);
+      }}
+      style={{ display: "flex", flexDirection: "column", gap: 12 }}
+    >
+      <input
+        type="text"
+        placeholder="Usuario"
+        required
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        style={{
+          background: "transparent",
+          border: "1px solid rgba(0,255,0,0.5)",
+          color: "white",
+          padding: "10px 12px",
+          fontFamily: '"Courier New", monospace',
+          borderRadius: 8,
+        }}
+      />
+      <input
+        type="password"
+        placeholder="Contraseña"
+        required
+        style={{
+          background: "transparent",
+          border: "1px solid rgba(0,255,0,0.5)",
+          color: "white",
+          padding: "10px 12px",
+          fontFamily: '"Courier New", monospace',
+          borderRadius: 8,
+        }}
+      />
+      <button
+        type="submit"
+        style={{
+          marginTop: 4,
+          padding: "10px 12px",
+          background: "#0a0",
+          color: "#001700",
+          fontWeight: "bold",
+          border: "1px solid #19ff47",
+          cursor: "pointer",
+          borderRadius: 10,
+          boxShadow: "0 0 18px rgba(0,255,0,.45)",
+        }}
+      >
+        Entrar
+      </button>
+    </form>
   );
 }

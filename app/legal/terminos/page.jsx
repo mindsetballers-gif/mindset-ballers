@@ -1,3 +1,6 @@
+"use client";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export default function Terminos() {
   return (
     <main className="bg-black text-white min-h-screen flex flex-col items-center py-16 px-6">

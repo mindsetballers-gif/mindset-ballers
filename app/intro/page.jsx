@@ -1,53 +1,52 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function IntroPage() {
-  const videoRef = useRef(null);
   const router = useRouter();
-  const [showMessage, setShowMessage] = useState(false);
+  const searchParams = useSearchParams();
+  const username = searchParams.get("username");
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
-
     if (video) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          console.log("El navegador bloqueó el autoplay con sonido. El usuario deberá hacer click.");
-        });
-      }
-
-      video.addEventListener("ended", () => {
-        setShowMessage(true);
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2000);
+      // Intentar reproducir automáticamente con sonido
+      video.play().catch(() => {
+        console.warn("El navegador bloqueó la reproducción automática con sonido.");
       });
+
+      const handleEnded = () => {
+        router.push(`/dashboard?username=${username}`);
+      };
+
+      video.addEventListener("ended", handleEnded);
+
+      return () => {
+        video.removeEventListener("ended", handleEnded);
+      };
     }
-  }, [router]);
+  }, [router, username]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-center">
-      <div className="mt-12 mb-12 relative w-full flex justify-center">
-        {/* Contenedor con efecto glow */}
-        <div className="relative rounded-xl shadow-lg max-w-4xl w-full overflow-hidden">
-          <video
-            ref={videoRef}
-            src="/intro.mp4"
-            className="w-full h-auto rounded-xl shadow-[0_0_40px_10px_rgba(0,255,0,0.5)]"
-            autoPlay
-            playsInline
-            controls
-          />
-        </div>
-      </div>
-
-      {showMessage && (
-        <p className="text-green-400 text-3xl font-bold mt-6 animate-pulse">
-          ✅ Acceso concedido
-        </p>
-      )}
+    <div className="flex items-center justify-center min-h-screen bg-black">
+      <video
+        ref={videoRef}
+        className="rounded-xl shadow-lg border-2 border-green-500"
+        style={{
+          maxWidth: "100%",   // No sobrepasa el ancho de la pantalla
+          maxHeight: "100vh", // No sobrepasa la altura de la pantalla
+          height: "auto",
+          margin: "0 auto",
+          display: "block",
+        }}
+        autoPlay
+        controls
+        playsInline
+      >
+        <source src="/img/intro.mp4" type="video/mp4" />
+        Tu navegador no soporta el video.
+      </video>
     </div>
   );
 }
