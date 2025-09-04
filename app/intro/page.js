@@ -4,8 +4,6 @@ import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
 
 export default function IntroPage() {
   const router = useRouter();
@@ -20,15 +18,6 @@ export default function IntroPage() {
 
     v.loop = false;
 
-    const tryPlay = async () => {
-      try {
-        await v.play();
-      } catch {
-        // Si el navegador bloquea autoplay, el usuario hará click
-      }
-    };
-    tryPlay();
-
     const handleEnded = () => {
       router.replace(`/dashboard?username=${encodeURIComponent(username)}`);
     };
@@ -38,21 +27,38 @@ export default function IntroPage() {
   }, [router, username]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black relative">
-      {/* Brillo verde de fondo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 to-black opacity-60 blur-3xl"></div>
+    <div className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
+      {/* Glow verde de fondo */}
+      <div className="pointer-events-none absolute -z-10 inset-0 opacity-60">
+        <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full blur-3xl"
+             style={{ background: "radial-gradient(circle, rgba(34,197,94,0.35) 0%, rgba(0,0,0,0) 70%)" }} />
+        <div className="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full blur-3xl"
+             style={{ background: "radial-gradient(circle, rgba(34,197,94,0.25) 0%, rgba(0,0,0,0) 70%)" }} />
+      </div>
 
-      {/* Video */}
-      <video
-        ref={videoRef}
-        className="relative rounded-2xl max-h-[90vh] max-w-[90vw] object-contain shadow-[0_0_30px_rgba(0,255,0,0.6)]"
-        src="/img/intro.mp4"
-        playsInline
-        autoPlay
-        controls={false}
-        muted={false}
-        preload="auto"
-      />
+      {/* Contenedor con tamaño fijo para vídeo vertical */}
+      <div
+        className="
+          relative
+          w-[360px] md:w-[420px] lg:w-[520px]     /* ancho fijo por breakpoint */
+          max-h-[90vh]                            /* deja margen arriba/abajo */
+          rounded-[24px]
+          shadow-[0_0_35px_rgba(34,197,94,0.45)]
+          bg-black
+        "
+        style={{ aspectRatio: "9 / 16" }}         /* forma vertical */
+      >
+        <video
+          ref={videoRef}
+          src="/img/intro.mp4"                     /* debe existir: public/img/intro.mp4 */
+          className="absolute inset-0 w-full h-full rounded-[24px] object-contain bg-black"
+          playsInline
+          autoPlay
+          muted                                    /* garantiza autoplay en móvil */
+          controls={false}
+          preload="auto"
+        />
+      </div>
     </div>
   );
 }
