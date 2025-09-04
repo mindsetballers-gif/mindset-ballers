@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-export const dynamic = "force-dynamic";
+import { useRef, useEffect } from "react";
 
 export default function IntroPage() {
   const router = useRouter();
@@ -16,10 +14,12 @@ export default function IntroPage() {
     const v = videoRef.current;
     if (!v) return;
 
-    v.loop = false;
+    v.play().catch(() => {
+      // Si el navegador bloquea el autoplay, el usuario puede darle manualmente
+    });
 
     const handleEnded = () => {
-      router.replace(`/dashboard?username=${encodeURIComponent(username)}`);
+      router.push(`/dashboard?username=${encodeURIComponent(username)}`);
     };
 
     v.addEventListener("ended", handleEnded);
@@ -27,36 +27,22 @@ export default function IntroPage() {
   }, [router, username]);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* Glow verde de fondo */}
-      <div className="pointer-events-none absolute -z-10 inset-0 opacity-60">
-        <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(circle, rgba(34,197,94,0.35) 0%, rgba(0,0,0,0) 70%)" }} />
-        <div className="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(circle, rgba(34,197,94,0.25) 0%, rgba(0,0,0,0) 70%)" }} />
+    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+      {/* Fondo con efecto verde brillante */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-green-900 to-black opacity-80 z-0" />
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <div className="w-[400px] h-[700px] rounded-full bg-green-500 opacity-20 blur-3xl animate-pulse"></div>
       </div>
 
-      {/* Contenedor con tamaño fijo para vídeo vertical */}
-      <div
-        className="
-          relative
-          w-[360px] md:w-[420px] lg:w-[520px]     /* ancho fijo por breakpoint */
-          max-h-[90vh]                            /* deja margen arriba/abajo */
-          rounded-[24px]
-          shadow-[0_0_35px_rgba(34,197,94,0.45)]
-          bg-black
-        "
-        style={{ aspectRatio: "9 / 16" }}         /* forma vertical */
-      >
+      {/* Video centrado */}
+      <div className="relative z-10 flex items-center justify-center">
         <video
           ref={videoRef}
-          src="/img/intro.mp4"                     /* debe existir: public/img/intro.mp4 */
-          className="absolute inset-0 w-full h-full rounded-[24px] object-contain bg-black"
-          playsInline
+          src="/intro.mp4"
           autoPlay
-          muted                                    /* garantiza autoplay en móvil */
-          controls={false}
-          preload="auto"
+          muted
+          playsInline
+          className="w-[360px] h-[640px] object-cover rounded-2xl shadow-2xl border-2 border-green-500"
         />
       </div>
     </div>
