@@ -10,10 +10,15 @@ export default function DashboardPage() {
 
   return (
     <div className="relative min-h-screen bg-black text-green-400">
-      {/* Glow de fondo sutil para integrar el look Matrix */}
+      {/* Glow de fondo */}
       <div className="pointer-events-none absolute -z-10 inset-0 opacity-40">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(circle, rgba(34,197,94,0.20) 0%, rgba(0,0,0,0) 70%)" }} />
+        <div
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(34,197,94,0.20) 0%, rgba(0,0,0,0) 70%)",
+          }}
+        />
       </div>
 
       <main className="mx-auto max-w-6xl px-6 py-12 flex flex-col items-center">
@@ -24,10 +29,12 @@ export default function DashboardPage() {
 
         {/* Texto introductorio */}
         <p className="text-lg md:text-xl max-w-3xl text-center mb-10 text-white/90 leading-relaxed">
-          Estás dentro de una <span className="font-bold text-green-400">comunidad privada</span>,
-          a la que muy pocos logran acceder. Aquí encontrarás conocimiento exclusivo,
-          pruebas de mentalidad deportiva y un entorno en el que descubriremos si realmente
-          estás preparado para pertenecer a esta élite.
+          Estás dentro de una{" "}
+          <span className="font-bold text-green-400">comunidad privada</span>, a
+          la que muy pocos logran acceder. Aquí encontrarás conocimiento
+          exclusivo, pruebas de mentalidad deportiva y un entorno en el que
+          descubriremos si realmente estás preparado para pertenecer a esta
+          élite.
         </p>
 
         <h2 className="text-2xl font-mono mb-6">Áreas de acceso exclusivo</h2>
@@ -38,38 +45,4 @@ export default function DashboardPage() {
             img="/img/CR7.jpeg"
             title="Módulos de Mentalidad"
             desc="Contenido exclusivo para trabajar tu mentalidad deportiva. Aprende a conocerte,
-            gestionar la presión y responder en momentos clave."
-          />
-          <Card
-            img="/img/Totti.jpeg"
-            title="Llamadas en directo"
-            desc="Accede a sesiones en vivo donde podrás interactuar directamente,
-            resolver dudas y compartir tu progreso."
-          />
-          <Card
-            img="/img/amigos.jpeg"
-            title="Networking"
-            desc="Conecta con otros jugadores que comparten tu misma mentalidad y establece relaciones
-            que impulsen tu carrera."
-          />
-          <Card
-            img="/img/Ronaldinho.jpeg"
-            title="Experiencias Reales"
-            desc="Aprende de las vivencias de grandes futbolistas y descubre cómo aplicarlas en tu
-            propio camino."
-          />
-        </div>
-
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 mt-12">
-          <a
-            href="https://forms.gle/YcD5fyCep67oxwCMA"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              px-10 py-4 text-lg font-bold rounded-xl
-              bg-gradient-to-r from-green-400 via-green-500 to-green-600
-              text-black shadow-[0_0_25px_rgba(34,197,94,0.6)]
-              hover:shadow-[0_0_35px_rgba(34,197,94,0.8)]
-              transition-transform hover:scale-110
-              a
+            ge
