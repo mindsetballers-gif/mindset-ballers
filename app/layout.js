@@ -1,15 +1,15 @@
-// Archivo: app/layout.js
-import "./globals.css";
-
+// app/layout.js
 export const metadata = {
-  title: "Mindset Ballers",
-  description: "Comunidad para futbolistas con mentalidad de élite",
+  title: "Mi Web",
+  description: "Sitio publicado en Vercel",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body style={{ margin: 0, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif", color: "#0f172a" }}>
+        {children}
+      </body>
     </html>
   );
 }
