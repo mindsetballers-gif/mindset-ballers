@@ -1,26 +1,36 @@
 "use client";
+
 import { useSearchParams } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
   const username = searchParams.get("username") || "Usuario";
 
   return (
-    <div className="min-h-screen bg-black text-green-400 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-black text-green-400 flex flex-col items-center p-6">
+      {/* Bienvenida */}
       <h1 className="text-3xl font-mono mb-4">
         Bienvenido, <span className="font-bold">{username}</span>
       </h1>
 
+      {/* Texto introductorio */}
       <p className="text-xl max-w-3xl text-center mb-10 text-white leading-relaxed">
-        Estás dentro de una <span className="font-bold text-green-400">comunidad privada</span>,
-        a la que muy pocos logran acceder. Aquí encontrarás conocimiento exclusivo,
-        pruebas de mentalidad deportiva y un entorno en el que descubriremos si realmente
-        estás preparado para pertenecer a esta élite.
+        Estás dentro de una{" "}
+        <span className="font-bold text-green-400">comunidad privada</span>, a la que muy pocos
+        logran acceder. Aquí encontrarás conocimiento exclusivo, pruebas de mentalidad deportiva y
+        un entorno en el que descubriremos si realmente estás preparado para pertenecer a esta élite.
       </p>
 
+      {/* Subtítulo */}
       <h2 className="text-2xl font-mono mb-6">Áreas de acceso exclusivo</h2>
 
+      {/* Grid de apartados */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-6xl">
+        {/* Cristiano */}
         <div className="border-2 border-green-500 rounded-2xl p-6 text-center shadow-lg transition transform hover:scale-105 hover:shadow-green-500/80 hover:bg-green-500/10">
           <div className="overflow-hidden rounded-2xl">
             <img
@@ -36,6 +46,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {/* Totti */}
         <div className="border-2 border-green-500 rounded-2xl p-6 text-center shadow-lg transition transform hover:scale-105 hover:shadow-green-500/80 hover:bg-green-500/10">
           <div className="overflow-hidden rounded-2xl">
             <img
@@ -46,11 +57,12 @@ export default function DashboardPage() {
           </div>
           <h3 className="text-xl font-bold mt-4 text-green-400">Llamadas en directo</h3>
           <p className="mt-2 text-sm text-white">
-            Accede a sesiones en vivo donde podrás interactuar directamente,
-            resolver dudas y compartir tu progreso.
+            Accede a sesiones en vivo donde podrás interactuar directamente, resolver dudas y
+            compartir tu progreso.
           </p>
         </div>
 
+        {/* Networking */}
         <div className="border-2 border-green-500 rounded-2xl p-6 text-center shadow-lg transition transform hover:scale-105 hover:shadow-green-500/80 hover:bg-green-500/10">
           <div className="overflow-hidden rounded-2xl">
             <img
@@ -61,11 +73,12 @@ export default function DashboardPage() {
           </div>
           <h3 className="text-xl font-bold mt-4 text-green-400">Networking</h3>
           <p className="mt-2 text-sm text-white">
-            Conecta con otros jugadores que comparten tu misma mentalidad y establece relaciones
-            que impulsen tu carrera.
+            Conecta con otros jugadores que comparten tu misma mentalidad y establece relaciones que
+            impulsen tu carrera.
           </p>
         </div>
 
+        {/* Ronaldinho */}
         <div className="border-2 border-green-500 rounded-2xl p-6 text-center shadow-lg transition transform hover:scale-105 hover:shadow-green-500/80 hover:bg-green-500/10">
           <div className="overflow-hidden rounded-2xl">
             <img
@@ -76,12 +89,13 @@ export default function DashboardPage() {
           </div>
           <h3 className="text-xl font-bold mt-4 text-green-400">Experiencias Reales</h3>
           <p className="mt-2 text-sm text-white">
-            Aprende de las vivencias de grandes futbolistas y descubre cómo aplicarlas en tu
-            propio camino.
+            Aprende de las vivencias de grandes futbolistas y descubre cómo aplicarlas en tu propio
+            camino.
           </p>
         </div>
       </div>
 
+      {/* Botones de acción */}
       <div className="flex space-x-6 mt-12">
         <a
           href="https://forms.gle/YcD5fyCep67oxwCMA"
